@@ -15,6 +15,7 @@ use App\Http\Controllers\admin\notify\EmailController;
 use App\Http\Controllers\admin\ticket\TicketController;
 use App\Http\Controllers\Admin\User\CustomerController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\Content\BannerController;
 use App\Http\Controllers\Admin\Market\CommentController;
 use App\Http\Controllers\Admin\Market\GalleryController;
 use App\Http\Controllers\Admin\Market\PaymentController;
@@ -32,9 +33,9 @@ use App\Http\Controllers\Admin\Market\ProductColorController;
 use App\Http\Controllers\Admin\Market\PropertyValueController;
 use App\Http\Controllers\Admin\Ticket\TicketCategoryController;
 use App\Http\Controllers\Admin\Ticket\TicketPriorityController;
+use App\Http\Controllers\Auth\Customer\LoginRegisterController;
 use App\Http\Controllers\Admin\Content\CommentController as ContentCommentController;
 use App\Http\Controllers\Admin\Content\CategoryController as ContentCategoryController;
-use App\Http\Controllers\Auth\Customer\LoginRegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -137,7 +138,7 @@ Route::prefix('admin')->namespace('Admin')->group(function () {
             Route::get('/canceled', [OrderController::class, 'canceled'])->name('admin.market.order.canceled');
             Route::get('/returned', [OrderController::class, 'returned'])->name('admin.market.order.returned');
             Route::get('/show/{order}', [OrderController::class, 'show'])->name('admin.market.order.show');
-             Route::get('/show/{order}/detail', [OrderController::class, 'detail'])->name('admin.market.order.show.detail');
+            Route::get('/show/{order}/detail', [OrderController::class, 'detail'])->name('admin.market.order.show.detail');
             Route::get('/change-send-status/{order}', [OrderController::class, 'changeSendStatus'])->name('admin.market.order.changeSendStatus');
             Route::get('/change-order-status/{order}', [OrderController::class, 'changeOrderStatus'])->name('admin.market.order.changeOrderStatus');
             Route::get('/cancel-order/{order}', [OrderController::class, 'cancelOrder'])->name('admin.market.order.cancelOrder');
@@ -188,13 +189,13 @@ Route::prefix('admin')->namespace('Admin')->group(function () {
             Route::delete('/destroy/{categoryAttribute}', [PropertyController::class, 'destroy'])->name('admin.market.property.destroy');
 
 
-               //value
-               Route::get('/value/{categoryAttribute}', [PropertyValueController::class, 'index'])->name('admin.market.value.index');
-               Route::get('/value/create/{categoryAttribute}', [PropertyValueController::class, 'create'])->name('admin.market.value.create');
-               Route::post('/value/store/{categoryAttribute}', [PropertyValueController::class, 'store'])->name('admin.market.value.store');
-               Route::get('/value/edit/{categoryAttribute}/{value}', [PropertyValueController::class, 'edit'])->name('admin.market.value.edit');
-               Route::put('/value/update/{categoryAttribute}/{value}', [PropertyValueController::class, 'update'])->name('admin.market.value.update');
-               Route::delete('/value/destroy/{categoryAttribute}/{value}', [PropertyValueController::class, 'destroy'])->name('admin.market.value.destroy');
+            //value
+            Route::get('/value/{categoryAttribute}', [PropertyValueController::class, 'index'])->name('admin.market.value.index');
+            Route::get('/value/create/{categoryAttribute}', [PropertyValueController::class, 'create'])->name('admin.market.value.create');
+            Route::post('/value/store/{categoryAttribute}', [PropertyValueController::class, 'store'])->name('admin.market.value.store');
+            Route::get('/value/edit/{categoryAttribute}/{value}', [PropertyValueController::class, 'edit'])->name('admin.market.value.edit');
+            Route::put('/value/update/{categoryAttribute}/{value}', [PropertyValueController::class, 'update'])->name('admin.market.value.update');
+            Route::delete('/value/destroy/{categoryAttribute}/{value}', [PropertyValueController::class, 'destroy'])->name('admin.market.value.destroy');
         });
 
         //store
@@ -272,6 +273,17 @@ Route::prefix('admin')->namespace('Admin')->group(function () {
             Route::delete('/destroy/{post}', [PostController::class, 'destroy'])->name('admin.content.post.destroy');
             Route::get('/status/{post}', [PostController::class, 'status'])->name('admin.content.post.status');
             Route::get('/commentable/{post}', [PostController::class, 'commentable'])->name('admin.content.post.commentable');
+        });
+
+        //banner
+        Route::prefix('banner')->group(function () {
+            Route::get('/', [BannerController::class, 'index'])->name('admin.content.banner.index');
+            Route::get('/create', [BannerController::class, 'create'])->name('admin.content.banner.create');
+            Route::post('/store', [BannerController::class, 'store'])->name('admin.content.banner.store');
+            Route::get('/edit/{banner}', [BannerController::class, 'edit'])->name('admin.content.banner.edit');
+            Route::put('/update/{banner}', [BannerController::class, 'update'])->name('admin.content.banner.update');
+            Route::delete('/destroy/{banner}', [BannerController::class, 'destroy'])->name('admin.content.banner.destroy');
+            Route::get('/status/{banner}', [BannerController::class, 'status'])->name('admin.content.banner.status');
         });
     });
 
@@ -418,12 +430,12 @@ Route::prefix('admin')->namespace('Admin')->group(function () {
 
 
 Route::namespace('Auth')->group(function () {
-   Route::get('login-register', [LoginRegisterController::class, 'loginRegisterForm'])->name('auth.customer.login-register-form');
-   Route::middleware('throttle:customer-login-register-limiter')->post('/login-register', [LoginRegisterController::class, 'loginRegister'])->name('auth.customer.login-register');
-   Route::get('login-confirm/{token}', [LoginRegisterController::class, 'loginConfirmForm'])->name('auth.customer.login-confirm-form');
-   Route::middleware('throttle:customer-login-confirm-limiter')->post('/login-confirm/{token}', [LoginRegisterController::class, 'loginConfirm'])->name('auth.customer.login-confirm');
-   Route::middleware('throttle:customer-login-resend-otp-limiter')-> get('/login-resend-otp/{token}', [LoginRegisterController::class, 'loginResendOtp'])->name('auth.customer.login-resend-otp');
-    Route::get('/logout',[LoginRegisterController::class,'logout'])->name('auth.customer.logout');
+    Route::get('login-register', [LoginRegisterController::class, 'loginRegisterForm'])->name('auth.customer.login-register-form');
+    Route::middleware('throttle:customer-login-register-limiter')->post('/login-register', [LoginRegisterController::class, 'loginRegister'])->name('auth.customer.login-register');
+    Route::get('login-confirm/{token}', [LoginRegisterController::class, 'loginConfirmForm'])->name('auth.customer.login-confirm-form');
+    Route::middleware('throttle:customer-login-confirm-limiter')->post('/login-confirm/{token}', [LoginRegisterController::class, 'loginConfirm'])->name('auth.customer.login-confirm');
+    Route::middleware('throttle:customer-login-resend-otp-limiter')->get('/login-resend-otp/{token}', [LoginRegisterController::class, 'loginResendOtp'])->name('auth.customer.login-resend-otp');
+    Route::get('/logout', [LoginRegisterController::class, 'logout'])->name('auth.customer.logout');
 });
 
 
