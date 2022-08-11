@@ -9,6 +9,7 @@
 </style>
 
 @endsection
+
 @section('content')
 
 
@@ -64,7 +65,7 @@
 
 @section('script')
 
-@php 
+@php
     $timer = ((new \Carbon\Carbon($otp->created_at))->addMinutes(5)->timestamp - \Carbon\Carbon::now()->timestamp) * 1000;
 @endphp
 
@@ -79,7 +80,7 @@
         var now = new Date().getTime();
 
         var distance = countDownDate - now;
-     
+
         var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 

@@ -1,18 +1,20 @@
 <?php
 
+use App\Http\Controllers\Admin\Market\GuaranteeController;
+use App\Http\Controllers\Customer\HomeController;
+use App\Http\Controllers\Customer\SalesProcess\CartController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\admin\user\RoleController;
-use App\Http\Controllers\admin\notify\SMSController;
+use App\Http\Controllers\Admin\Notify\SMSController;
 use App\Http\Controllers\Admin\Content\FAQController;
+use App\Http\Controllers\Admin\User\RoleController;
+use App\Http\Controllers\Admin\Notify\EmailController;
 use App\Http\Controllers\Admin\Content\MenuController;
-use App\Http\Controllers\admin\content\PageController;
-use App\Http\Controllers\admin\content\PostController;
+use App\Http\Controllers\Admin\Content\PageController;
+use App\Http\Controllers\Admin\Content\PostController;
 use App\Http\Controllers\Admin\Market\BrandController;
 use App\Http\Controllers\Admin\Market\OrderController;
 use App\Http\Controllers\Admin\Market\StoreController;
-use App\Http\Controllers\Admin\NotificationController;
-use App\Http\Controllers\admin\notify\EmailController;
-use App\Http\Controllers\admin\ticket\TicketController;
+use App\Http\Controllers\Admin\Ticket\TicketController;
 use App\Http\Controllers\Admin\User\CustomerController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\Content\BannerController;
@@ -23,10 +25,11 @@ use App\Http\Controllers\Admin\Market\ProductController;
 use App\Http\Controllers\Admin\User\AdminUserController;
 use App\Http\Controllers\Admin\Market\CategoryController;
 use App\Http\Controllers\Admin\Market\DeliveryController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\Market\DiscountController;
 use App\Http\Controllers\Admin\Market\PropertyController;
-use App\Http\Controllers\admin\setting\SettingController;
-use App\Http\Controllers\admin\user\PermissionController;
+use App\Http\Controllers\Admin\Setting\SettingController;
+use App\Http\Controllers\Admin\User\PermissionController;
 use App\Http\Controllers\Admin\Notify\EmailFileController;
 use App\Http\Controllers\Admin\Ticket\TicketAdminController;
 use App\Http\Controllers\Admin\Market\ProductColorController;
@@ -36,6 +39,7 @@ use App\Http\Controllers\Admin\Ticket\TicketPriorityController;
 use App\Http\Controllers\Auth\Customer\LoginRegisterController;
 use App\Http\Controllers\Admin\Content\CommentController as ContentCommentController;
 use App\Http\Controllers\Admin\Content\CategoryController as ContentCategoryController;
+use App\Http\Controllers\Customer\Market\ProductController as MarketProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -177,6 +181,14 @@ Route::prefix('admin')->namespace('Admin')->group(function () {
             Route::get('/color/create/{product}', [ProductColorController::class, 'create'])->name('admin.market.color.create');
             Route::post('/color/store/{product}', [ProductColorController::class, 'store'])->name('admin.market.color.store');
             Route::delete('/color/destroy/{product}/{color}', [ProductColorController::class, 'destroy'])->name('admin.market.color.destroy');
+
+
+
+            //guarantee
+            Route::get('/guarantee/{product}', [GuaranteeController::class, 'index'])->name('admin.market.guarantee.index');
+            Route::get('/guarantee/create/{product}', [GuaranteeController::class, 'create'])->name('admin.market.guarantee.create');
+            Route::post('/guarantee/store/{product}', [GuaranteeController::class, 'store'])->name('admin.market.guarantee.store');
+            Route::delete('/guarantee/destroy/{product}/{guarantee}', [GuaranteeController::class, 'destroy'])->name('admin.market.guarantee.destroy');
         });
 
         //property
@@ -439,10 +451,23 @@ Route::namespace('Auth')->group(function () {
 });
 
 
-Route::get('/', function (){
-    return view('customer.home');
-})->name('customer.home');
+Route::get('/', [HomeController::class, 'home'])->name('customer.home');
 
+Route::namespace('SalesProcess')->group(function () {
+
+    Route::get('/cart', [CartController::class, 'cart'])->name('customer.sales-process.cart');
+    Route::post('/cart', [CartController::class, 'updateCart'])->name('customer.sales-process.update-cart');
+    Route::post('/add-to-cart/{product:slug}', [CartController::class, 'addToCart'])->name('customer.sales-process.add-to-cart');
+    Route::post('/remove-from-cart/{cartItem}', [CartController::class, 'removeFromCart'])->name('customer.sales-process.remove-from-cart');
+
+});
+
+
+Route::namespace('Market')->group(function (){
+
+    Route::get('product/{product:slug}',[MarketProductController::class,'product'])->name('customer.market.product');
+    Route::post('/add-comment/product/{product:slug}',[MarketProductController::class,'product'])->name('customer.market.add-comment');
+});
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');

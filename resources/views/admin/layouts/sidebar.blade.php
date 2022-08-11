@@ -128,11 +128,11 @@
                 <i class="fas fa-bars"></i>
                 <span> دسته بندی تیکت ها </span>
             </a>
-            <a href="{{ route('admin.ticket.priority.index') }}" class="sidebar-link">
+              <a href="{{ route('admin.ticket.priority.index') }}" class="sidebar-link">
                 <i class="fas fa-bars"></i>
                 <span> اولویت تیکت ها </span>
             </a>
-            <a href="{{ route('admin.ticket.admin.index') }}" class="sidebar-link">
+              <a href="{{ route('admin.ticket.admin.index') }}" class="sidebar-link">
                 <i class="fas fa-bars"></i>
                 <span> ادمین تیکت ها </span>
             </a>
